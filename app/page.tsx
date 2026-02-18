@@ -20,9 +20,9 @@ interface SavedData {
 }
 
 export default function Home() {
-  const [candidateName, setCandidateName] = useState("")
-  const [registrationNumber, setRegistrationNumber] = useState("")
-  const [rollNumber, setRollNumber] = useState("")
+  const [candidateName, setCandidateName] = useState("Animesh Kumar")
+  const [registrationNumber, setRegistrationNumber] = useState("10001706843")
+  const [rollNumber, setRollNumber] = useState("320602224")
   const [preferences, setPreferences] = useState<(number | null)[]>(
     Array(TOTAL_POSTS).fill(null)
   )

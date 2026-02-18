@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { MapPin } from "lucide-react"
 
 export function SiteFooter() {
@@ -7,16 +8,13 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           {/* Logo and Name */}
           <div className="flex items-start gap-3">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary">
-              <svg viewBox="0 0 100 100" className="h-11 w-11" aria-hidden="true">
-                <circle cx="50" cy="50" r="48" fill="#8B3A3A" />
-                <circle cx="50" cy="50" r="42" fill="none" stroke="#d4a574" strokeWidth="2" />
-                <circle cx="50" cy="35" r="12" fill="#d4a574" />
-                <path d="M30 55 L50 75 L70 55" fill="none" stroke="#d4a574" strokeWidth="3" />
-                <rect x="46" y="75" width="8" height="10" fill="#d4a574" />
-                <rect x="35" y="85" width="30" height="4" rx="2" fill="#d4a574" />
-              </svg>
-            </div>
+            <Image
+              src="/images/ssc-logo.jpg"
+              alt="Staff Selection Commission Logo"
+              width={56}
+              height={56}
+              className="h-14 w-14 shrink-0 rounded-full object-cover"
+            />
             <div>
               <p className="text-lg font-bold text-card">Staff Selection</p>
               <p className="text-lg font-bold text-card">Commission</p>
