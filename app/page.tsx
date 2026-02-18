@@ -20,9 +20,9 @@ interface SavedData {
 }
 
 export default function Home() {
-  const [candidateName, setCandidateName] = useState("Animesh Kumar")
-  const [registrationNumber, setRegistrationNumber] = useState("10001706843")
-  const [rollNumber, setRollNumber] = useState("320602224")
+  const candidateName = "Animesh Kumar"
+  const registrationNumber = "10001706843"
+  const rollNumber = "320602224"
   const [preferences, setPreferences] = useState<(number | null)[]>(
     Array(TOTAL_POSTS).fill(null)
   )
@@ -37,9 +37,6 @@ export default function Home() {
       const stored = localStorage.getItem(STORAGE_KEY)
       if (stored) {
         const data: SavedData = JSON.parse(stored)
-        setCandidateName(data.candidateName || "")
-        setRegistrationNumber(data.registrationNumber || "")
-        setRollNumber(data.rollNumber || "")
         if (data.preferences && data.preferences.length === TOTAL_POSTS) {
           setPreferences(data.preferences)
         }
@@ -110,9 +107,6 @@ export default function Home() {
   }, [preferences, agreed, candidateName, registrationNumber, rollNumber])
 
   const handleClose = useCallback(() => {
-    setCandidateName("")
-    setRegistrationNumber("")
-    setRollNumber("")
     setPreferences(Array(TOTAL_POSTS).fill(null))
     setAgreed(false)
     setErrorMessage("")
@@ -131,7 +125,7 @@ export default function Home() {
               Option Cum Preference Form
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Combined Graduate Level Examination, 2024
+              Combined Graduate Level Examination, 2025
             </p>
           </div>
 
@@ -139,11 +133,8 @@ export default function Home() {
           <div className="border-b border-border px-6 py-5">
             <CandidateInfo
               candidateName={candidateName}
-              setCandidateName={setCandidateName}
               registrationNumber={registrationNumber}
-              setRegistrationNumber={setRegistrationNumber}
               rollNumber={rollNumber}
-              setRollNumber={setRollNumber}
             />
           </div>
 
