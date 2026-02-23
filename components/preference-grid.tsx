@@ -84,9 +84,9 @@ export function PreferenceGrid({
       <p className="text-sm font-medium text-foreground">
         {"Candidates should indicate their option(s), in order of preference, in the Boxes given below:"}
       </p>
-      <div className="space-y-2 overflow-x-auto">
+      <div className="space-y-2">
         {rows.map((row, rowIndex) => (
-          <div key={rowIndex} className="flex gap-1">
+          <div key={rowIndex} className="flex flex-wrap gap-1">
             {row.map((index) => (
               <div key={index} className="flex flex-col items-center">
                 <span className="mb-0.5 text-xs font-medium text-muted-foreground">
