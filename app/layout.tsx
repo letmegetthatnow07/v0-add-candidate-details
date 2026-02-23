@@ -3,7 +3,7 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'SSC CGL 2025 - Option Cum Preference Form (Practice)',
+  title: 'SSC CGL 2025 - Option Cum Preference Form',
   description: 'Practice portal for SSC CGL 2025 Option Cum Preference Form - Staff Selection Commission, Government of India',
 }
 
