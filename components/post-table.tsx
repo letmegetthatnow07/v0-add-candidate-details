@@ -5,10 +5,9 @@ import { type Post } from "@/lib/posts-data"
 interface PostTableProps {
   posts: Post[]
   preferences: (number | null)[]
-  onRowClick: (sNo: number) => void
 }
 
-export function PostTable({ posts, preferences, onRowClick }: PostTableProps) {
+export function PostTable({ posts, preferences }: PostTableProps) {
   const getPreferenceForPost = (sNo: number): number | null => {
     const idx = preferences.indexOf(sNo)
     return idx !== -1 ? idx + 1 : null
@@ -40,8 +39,7 @@ export function PostTable({ posts, preferences, onRowClick }: PostTableProps) {
             return (
               <tr
                 key={`${post.postCode}-${post.sNo}`}
-                onClick={() => onRowClick(post.sNo)}
-                className={`cursor-pointer border-b border-border transition-colors hover:bg-accent ${
+                className={`border-b border-border ${
                   isSelected ? "bg-accent" : index % 2 === 1 ? "bg-secondary" : "bg-card"
                 }`}
               >

@@ -47,26 +47,7 @@ export default function Home() {
     }
   }, [])
 
-  const handleRowClick = useCallback(
-    (sNo: number) => {
-      setPreferences((prev) => {
-        const existing = prev.indexOf(sNo)
-        if (existing !== -1) {
-          // Remove it (toggle off)
-          const newPrefs = [...prev]
-          newPrefs[existing] = null
-          return newPrefs
-        }
-        // Find next empty slot
-        const nextEmpty = prev.findIndex((p) => p === null)
-        if (nextEmpty === -1) return prev
-        const newPrefs = [...prev]
-        newPrefs[nextEmpty] = sNo
-        return newPrefs
-      })
-    },
-    []
-  )
+
 
   const handleReset = useCallback(() => {
     setPreferences(Array(TOTAL_POSTS).fill(null))
@@ -146,7 +127,6 @@ export default function Home() {
             <PostTable
               posts={posts}
               preferences={preferences}
-              onRowClick={handleRowClick}
             />
           </div>
 
