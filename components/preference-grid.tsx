@@ -69,44 +69,30 @@ export function PreferenceGrid({
     [preferences, setPreferences, totalPosts]
   )
 
-  // Rows of 10 as per SSC layout for better fit
-  const rows: number[][] = []
-  for (let i = 0; i < totalPosts; i += 10) {
-    const row: number[] = []
-    for (let j = i; j < Math.min(i + 10, totalPosts); j++) {
-      row.push(j)
-    }
-    rows.push(row)
-  }
-
   return (
     <div className="space-y-3">
       <p className="text-sm font-medium text-foreground">
         {"Candidates should indicate their option(s), in order of preference, in the Boxes given below:"}
       </p>
-      <div className="space-y-2">
-        {rows.map((row, rowIndex) => (
-          <div key={rowIndex} className="flex flex-wrap gap-2 justify-start">
-            {row.map((index) => (
-              <div key={index} className="flex flex-col items-center">
-                <span className="mb-0.5 text-xs font-medium text-muted-foreground">
-                  {index + 1}
-                </span>
-                <input
-                  ref={(el) => {
-                    inputRefs.current[index] = el
-                  }}
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={2}
-                  value={preferences[index] !== null ? String(preferences[index]) : ""}
-                  onChange={(e) => handleChange(index, e.target.value)}
-                  onKeyDown={(e) => handleKeyDown(index, e)}
-                  className="h-11 w-11 rounded border border-border bg-card text-center text-sm font-medium text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-ring"
-                  aria-label={`Preference position ${index + 1}`}
-                />
-              </div>
-            ))}
+      <div className="grid grid-cols-10 gap-3">
+        {Array.from({ length: totalPosts }).map((_, index) => (
+          <div key={index} className="flex flex-col items-center">
+            <span className="mb-0.5 text-xs font-medium text-muted-foreground">
+              {index + 1}
+            </span>
+            <input
+              ref={(el) => {
+                inputRefs.current[index] = el
+              }}
+              type="text"
+              inputMode="numeric"
+              maxLength={2}
+              value={preferences[index] !== null ? String(preferences[index]) : ""}
+              onChange={(e) => handleChange(index, e.target.value)}
+              onKeyDown={(e) => handleKeyDown(index, e)}
+              className="h-11 w-11 rounded border border-border bg-card text-center text-sm font-medium text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-ring"
+              aria-label={`Preference position ${index + 1}`}
+            />
           </div>
         ))}
       </div>
