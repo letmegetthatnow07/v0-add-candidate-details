@@ -16,14 +16,14 @@ interface SavedData {
   candidateName: string
   registrationNumber: string
   rollNumber: string
-  preferences: (number | null)[]
+  preferences: (string | null)[]
 }
 
 export default function Home() {
   const candidateName = "Animesh Kumar"
   const registrationNumber = "10001706843"
   const rollNumber = "320602224"
-  const [preferences, setPreferences] = useState<(number | null)[]>(
+  const [preferences, setPreferences] = useState<(string | null)[]>(
     Array(TOTAL_POSTS).fill(null)
   )
   const [agreed, setAgreed] = useState(false)

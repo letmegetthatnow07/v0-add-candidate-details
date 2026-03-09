@@ -1,10 +1,11 @@
 "use client"
 
 import { useRef, useCallback } from "react"
+import { posts } from "@/lib/posts-data"
 
 interface PreferenceGridProps {
-  preferences: (number | null)[]
-  setPreferences: (prefs: (number | null)[]) => void
+  preferences: (string | null)[]
+  setPreferences: (prefs: (string | null)[]) => void
   totalPosts: number
 }
 
@@ -14,6 +15,7 @@ export function PreferenceGrid({
   totalPosts,
 }: PreferenceGridProps) {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
+  const validPostCodes = new Set(posts.map(p => p.postCode.toUpperCase()))
 
   const handleChange = useCallback(
     (index: number, value: string) => {
@@ -25,16 +27,18 @@ export function PreferenceGrid({
         return
       }
 
-      const num = parseInt(value, 10)
-      if (isNaN(num) || num < 1 || num > totalPosts) return
+      const upperValue = value.toUpperCase()
+      
+      // Validate post code exists
+      if (!validPostCodes.has(upperValue)) return
 
       // Check for duplicate
       const existingIndex = newPrefs.findIndex(
-        (p, i) => p === num && i !== index
+        (p, i) => p?.toUpperCase() === upperValue && i !== index
       )
       if (existingIndex !== -1) return
 
-      newPrefs[index] = num
+      newPrefs[index] = upperValue
       setPreferences(newPrefs)
 
       // Auto-focus next empty box
@@ -47,7 +51,7 @@ export function PreferenceGrid({
         }
       }
     },
-    [preferences, setPreferences, totalPosts]
+    [preferences, setPreferences, totalPosts, validPostCodes]
   )
 
   const handleKeyDown = useCallback(
@@ -85,13 +89,13 @@ export function PreferenceGrid({
                 inputRefs.current[index] = el
               }}
               type="text"
-              inputMode="numeric"
-              maxLength={2}
+              maxLength={3}
               value={preferences[index] !== null ? String(preferences[index]) : ""}
               onChange={(e) => handleChange(index, e.target.value)}
               onKeyDown={(e) => handleKeyDown(index, e)}
-              className="h-11 w-11 rounded border border-border bg-card text-center text-sm font-medium text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-ring"
+              className="h-11 w-14 rounded border border-border bg-card text-center text-sm font-medium text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-ring uppercase"
               aria-label={`Preference position ${index + 1}`}
+              placeholder=""
             />
           </div>
         ))}
