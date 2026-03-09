@@ -69,11 +69,11 @@ export function PreferenceGrid({
     [preferences, setPreferences, totalPosts]
   )
 
-  // Rows of 17 as per SSC layout
+  // Rows of 10 as per SSC layout for better fit
   const rows: number[][] = []
-  for (let i = 0; i < totalPosts; i += 17) {
+  for (let i = 0; i < totalPosts; i += 10) {
     const row: number[] = []
-    for (let j = i; j < Math.min(i + 17, totalPosts); j++) {
+    for (let j = i; j < Math.min(i + 10, totalPosts); j++) {
       row.push(j)
     }
     rows.push(row)
@@ -86,7 +86,7 @@ export function PreferenceGrid({
       </p>
       <div className="space-y-2">
         {rows.map((row, rowIndex) => (
-          <div key={rowIndex} className="flex flex-wrap gap-1">
+          <div key={rowIndex} className="flex flex-wrap gap-2 justify-start">
             {row.map((index) => (
               <div key={index} className="flex flex-col items-center">
                 <span className="mb-0.5 text-xs font-medium text-muted-foreground">
