@@ -29,20 +29,23 @@ export function PreferenceGrid({
 
       const upperValue = value.toUpperCase()
       
-      // Validate post code exists
-      if (!validPostCodes.has(upperValue)) return
-
-      // Check for duplicate
-      const existingIndex = newPrefs.findIndex(
-        (p, i) => p?.toUpperCase() === upperValue && i !== index
-      )
-      if (existingIndex !== -1) return
+      // Allow user to type any alphanumeric input (for partial input like "B" or "B0")
+      // Only validate complete post codes (3 characters)
+      if (upperValue.length === 3) {
+        if (!validPostCodes.has(upperValue)) return
+        
+        // Check for duplicate only for complete codes
+        const existingIndex = newPrefs.findIndex(
+          (p, i) => p?.toUpperCase() === upperValue && i !== index
+        )
+        if (existingIndex !== -1) return
+      }
 
       newPrefs[index] = upperValue
       setPreferences(newPrefs)
 
-      // Auto-focus next empty box
-      if (index < totalPosts - 1) {
+      // Auto-focus next empty box when a valid complete code is entered
+      if (upperValue.length === 3 && validPostCodes.has(upperValue) && index < totalPosts - 1) {
         const nextEmpty = newPrefs.findIndex(
           (p, i) => i > index && p === null
         )
