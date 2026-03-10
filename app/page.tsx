@@ -10,7 +10,7 @@ import { Declaration } from "@/components/declaration"
 import { posts } from "@/lib/posts-data"
 
 const STORAGE_KEY = "ssc-cgl-preferences"
-const TOTAL_POSTS = 58
+const TOTAL_POSTS = 55
 
 interface SavedData {
   candidateName: string
