@@ -71,7 +71,7 @@ export function SiteFooter() {
       <div className="border-t border-footer-foreground/20">
         <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-2 px-4 py-3 text-xs text-footer-foreground">
           <span>{"© 2026 SSC. All Rights Reserved."}</span>
-          <span>{"Total Visitor Count: 1,23,45,678"}</span>
+          <span>{"Total Visitor Count: 341805290"}</span>
           <span>{"Last updated on Mar 9, 2026"}</span>
         </div>
       </div>
