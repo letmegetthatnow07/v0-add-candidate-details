@@ -213,6 +213,13 @@ export default function Home() {
               </div>
             )}
 
+            {/* Success Message */}
+            {hasSaved && !showSuccess && (
+              <div className="rounded bg-green-50 px-4 py-2 text-sm text-green-700 font-medium">
+                {"Your preference has been updated successfully."}
+              </div>
+            )}
+
             {/* Action Buttons */}
             <div className="flex items-center justify-center gap-8">
               <button
@@ -224,7 +231,7 @@ export default function Home() {
                     : "bg-gray-300 text-gray-600 cursor-not-allowed"
                 }`}
               >
-                Submit Preference
+                Submit
               </button>
             </div>
           </div>

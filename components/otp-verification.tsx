@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import Image from "next/image"
 import { LoadingOverlay } from "./loading-overlay"
 
 const MOBILE_OTP = "887567"
@@ -10,10 +11,10 @@ const EMAIL = "animeshkumar97@gmail.com"
 
 interface OTPRowProps {
   type: "mobile" | "email"
-  onBothVerified: (verified: boolean) => void
+  onVerified: (verified: boolean) => void
 }
 
-function OTPRow({ type, onBothVerified }: OTPRowProps) {
+function OTPRow({ type, onVerified }: OTPRowProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [showOTPInput, setShowOTPInput] = useState(false)
   const [otp, setOtp] = useState("")
@@ -21,10 +22,14 @@ function OTPRow({ type, onBothVerified }: OTPRowProps) {
   const [errorMessage, setErrorMessage] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
 
+  // Notify parent component whenever verification status changes
+  useEffect(() => {
+    onVerified(isVerified)
+  }, [isVerified, onVerified])
+
   const isEmail = type === "email"
   const value = isEmail ? EMAIL : MOBILE_NUMBER
   const correctOTP = isEmail ? EMAIL_OTP : MOBILE_OTP
-  const label = isEmail ? "Email:" : "Mobile:"
 
   const handleSendOTP = async () => {
     setIsLoading(true)
@@ -64,9 +69,7 @@ function OTPRow({ type, onBothVerified }: OTPRowProps) {
               value={value}
               disabled
               className="w-full rounded border border-border bg-gray-100 px-4 py-2.5 text-sm text-gray-600 cursor-not-allowed"
-              placeholder={label}
             />
-            <label className="text-xs text-gray-600 mt-1 block">{label}</label>
           </div>
           <button
             onClick={handleSendOTP}
@@ -134,21 +137,28 @@ export function OTPVerification({ onSubmitEnabled }: OTPVerificationProps) {
   const [mobileVerified, setMobileVerified] = useState(false)
   const [emailVerified, setEmailVerified] = useState(false)
 
-  const handleVerificationChange = (type: "mobile" | "email", verified: boolean) => {
-    if (type === "mobile") {
-      setMobileVerified(verified)
-    } else {
-      setEmailVerified(verified)
-    }
+  useEffect(() => {
     // Enable submit when at least one is verified
-    onSubmitEnabled(verified || (type === "mobile" ? emailVerified : mobileVerified))
-  }
+    const isEnabled = mobileVerified || emailVerified
+    onSubmitEnabled(isEnabled)
+  }, [mobileVerified, emailVerified, onSubmitEnabled])
 
   return (
     <div className="space-y-4">
+      {/* SSC Logo at top left */}
+      <div className="mb-4">
+        <Image
+          src="/images/ssc-logo.jpg"
+          alt="SSC Logo"
+          width={50}
+          height={50}
+          className="h-12 w-12 rounded-full object-cover"
+        />
+      </div>
+
       <OTPRow
         type="mobile"
-        onBothVerified={(verified) => handleVerificationChange("mobile", verified)}
+        onVerified={setMobileVerified}
       />
       <div className="flex items-center justify-center gap-3 py-2">
         <div className="h-px flex-1 bg-border" />
@@ -157,7 +167,7 @@ export function OTPVerification({ onSubmitEnabled }: OTPVerificationProps) {
       </div>
       <OTPRow
         type="email"
-        onBothVerified={(verified) => handleVerificationChange("email", verified)}
+        onVerified={setEmailVerified}
       />
     </div>
   )
