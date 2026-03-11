@@ -1,11 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import Image from "next/image"
+import { useState, useEffect, useRef } from "react"
 import { LoadingOverlay } from "./loading-overlay"
 
 const MOBILE_OTP = "887567"
-const EMAIL_OTP = "656457"
+const EMAIL_OTP = "887567"
 const MOBILE_NUMBER = "9472896759"
 const EMAIL = "animeshkumar97@gmail.com"
 
@@ -21,11 +20,33 @@ function OTPRow({ type, onVerified }: OTPRowProps) {
   const [isVerified, setIsVerified] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
+  const [countdown, setCountdown] = useState(0)
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  // Notify parent component whenever verification status changes
   useEffect(() => {
     onVerified(isVerified)
   }, [isVerified, onVerified])
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current)
+    }
+  }, [])
+
+  const startCountdown = () => {
+    setCountdown(60)
+    if (timerRef.current) clearInterval(timerRef.current)
+    timerRef.current = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timerRef.current!)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+  }
 
   const isEmail = type === "email"
   const value = isEmail ? EMAIL : MOBILE_NUMBER
@@ -39,6 +60,18 @@ function OTPRow({ type, onVerified }: OTPRowProps) {
     setIsLoading(false)
     setShowOTPInput(true)
     setSuccessMessage("OTP sent successfully!")
+    startCountdown()
+  }
+
+  const handleResendOTP = async () => {
+    setIsLoading(true)
+    setErrorMessage("")
+    setSuccessMessage("")
+    setOtp("")
+    await new Promise((resolve) => setTimeout(resolve, 1500))
+    setIsLoading(false)
+    setSuccessMessage("OTP resent successfully!")
+    startCountdown()
   }
 
   const handleValidateOTP = () => {
@@ -50,6 +83,8 @@ function OTPRow({ type, onVerified }: OTPRowProps) {
         setIsVerified(true)
         setShowOTPInput(false)
         setOtp("")
+        if (timerRef.current) clearInterval(timerRef.current)
+        setCountdown(0)
       }, 1500)
     } else {
       setErrorMessage("Incorrect OTP. Please try again.")
@@ -73,9 +108,9 @@ function OTPRow({ type, onVerified }: OTPRowProps) {
           </div>
           <button
             onClick={handleSendOTP}
-            disabled={isVerified}
+            disabled={isVerified || showOTPInput}
             className={`rounded-full px-6 py-2.5 text-sm font-medium transition-colors whitespace-nowrap ${
-              isVerified
+              isVerified || showOTPInput
                 ? "bg-gray-300 text-gray-600 cursor-not-allowed"
                 : "bg-[#8B4545] text-white hover:bg-[#744141]"
             }`}
@@ -96,7 +131,7 @@ function OTPRow({ type, onVerified }: OTPRowProps) {
           )}
         </div>
 
-        {/* Row 2: OTP Input + Validate (conditional) */}
+        {/* Row 2: OTP Input + Validate + Resend */}
         {showOTPInput && !isVerified && (
           <div className="space-y-2 pl-0">
             <div className="flex items-center gap-3">
@@ -116,6 +151,24 @@ function OTPRow({ type, onVerified }: OTPRowProps) {
                 Validate
               </button>
             </div>
+
+            {/* Resend OTP row */}
+            <div className="flex items-center gap-2">
+              {countdown > 0 ? (
+                <p className="text-xs text-gray-500">
+                  Resend OTP in{" "}
+                  <span className="font-semibold text-[#8B4545]">{countdown}s</span>
+                </p>
+              ) : (
+                <button
+                  onClick={handleResendOTP}
+                  className="text-xs font-medium text-[#8B4545] underline hover:text-[#744141] transition-colors"
+                >
+                  Resend OTP
+                </button>
+              )}
+            </div>
+
             {successMessage && (
               <p className="text-xs text-green-600 font-medium">{successMessage}</p>
             )}
@@ -138,26 +191,19 @@ export function OTPVerification({ onSubmitEnabled }: OTPVerificationProps) {
   const [emailVerified, setEmailVerified] = useState(false)
 
   useEffect(() => {
-    // Enable submit when at least one is verified
     const isEnabled = mobileVerified || emailVerified
     onSubmitEnabled(isEnabled)
   }, [mobileVerified, emailVerified, onSubmitEnabled])
 
   return (
     <div className="space-y-4">
-      <OTPRow
-        type="mobile"
-        onVerified={setMobileVerified}
-      />
+      <OTPRow type="mobile" onVerified={setMobileVerified} />
       <div className="flex items-center justify-center gap-3 py-2">
         <div className="h-px flex-1 bg-border" />
         <span className="text-sm text-muted-foreground">OR</span>
         <div className="h-px flex-1 bg-border" />
       </div>
-      <OTPRow
-        type="email"
-        onVerified={setEmailVerified}
-      />
+      <OTPRow type="email" onVerified={setEmailVerified} />
     </div>
   )
 }
