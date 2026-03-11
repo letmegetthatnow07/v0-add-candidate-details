@@ -30,7 +30,7 @@ export default function Home() {
     Array(TOTAL_POSTS).fill(null)
   )
   const [agreed, setAgreed] = useState(false)
-  const [hasSaved, setHasSaved] = useState(false)
+  const [hasSubmitted, setHasSubmitted] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false)
@@ -46,21 +46,8 @@ export default function Home() {
     document.body.removeChild(link)
   }, [])
 
-  // Load from localStorage on mount
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY)
-      if (stored) {
-        const data: SavedData = JSON.parse(stored)
-        if (data.preferences && data.preferences.length === TOTAL_POSTS) {
-          setPreferences(data.preferences)
-        }
-        setHasSaved(true)
-      }
-    } catch {
-      // Ignore parse errors
-    }
-  }, [])
+  // Do not persist hasSubmitted on refresh - always start fresh
+  // localStorage is only used for preference data, not submission state
 
 
 
@@ -84,11 +71,11 @@ export default function Home() {
       return
     }
     if (!isSubmitEnabled) {
-      setErrorMessage("Please verify at least one OTP before submitting.")
+      setErrorMessage("Please validate at least one OTP to proceed")
       return
     }
 
-    if (hasSaved) {
+    if (hasSubmitted) {
       // Update button behavior - no loading, just show success message for 3 seconds
       const data: SavedData = {
         candidateName,
@@ -105,7 +92,7 @@ export default function Home() {
         setErrorMessage("Failed to save data. Please try again.")
       }
     } else {
-      // Submit button behavior - show loading
+      // Submit button behavior - show loading for 2 seconds then show success modal
       setIsSubmitting(true)
       setTimeout(() => {
         const data: SavedData = {
@@ -117,19 +104,20 @@ export default function Home() {
 
         try {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-          setHasSaved(true)
-          setShowSuccess(true)
           setIsSubmitting(false)
+          setShowSuccess(true)
         } catch {
           setErrorMessage("Failed to save data. Please try again.")
           setIsSubmitting(false)
         }
       }, 2000)
     }
-  }, [preferences, agreed, candidateName, registrationNumber, rollNumber, isSubmitEnabled, hasSaved])
+  }, [preferences, agreed, candidateName, registrationNumber, rollNumber, isSubmitEnabled, hasSubmitted])
 
   const handleClose = useCallback(() => {
+    // When success modal is closed, set hasSubmitted to true
     setShowSuccess(false)
+    setHasSubmitted(true)
   }, [])
 
   return (
@@ -207,19 +195,29 @@ export default function Home() {
 
           {/* OTP Verification + Submit */}
           <div className="px-6 py-5 space-y-5">
-            {/* NOTE 4 and 5 */}
+            {/* NOTE 4 - Only visible before submission */}
+            {!hasSubmitted && (
+              <div className="space-y-1">
+                <p className="text-[13px] font-medium text-destructive">
+                  {"NOTE 4: At least one OTP verification (Mobile or Email) is required to proceed further. This preference form will not be submitted without OTP verification."}
+                </p>
+              </div>
+            )}
+
+            {/* OTP Verification Section - Only visible before submission */}
+            {!hasSubmitted && (
+              <div className="rounded-lg border border-border bg-card p-4">
+                <OTPVerification onSubmitEnabled={setIsSubmitEnabled} />
+              </div>
+            )}
+            
+            {/* NOTE 5 - Always visible but label changes */}
             <div className="space-y-1">
               <p className="text-[13px] font-medium text-destructive">
-                {"NOTE 4: At least one OTP verification (Mobile or Email) is required to proceed further. This preference form will not be submitted without OTP verification."}
+                {hasSubmitted 
+                  ? "NOTE: You can change your preferences until this window is open."
+                  : "NOTE 5: You can change your preferences until this window is open."}
               </p>
-              <p className="text-[13px] font-medium text-destructive">
-                {"NOTE 5: You can change your preferences until this window is open."}
-              </p>
-            </div>
-
-            {/* OTP Verification Section */}
-            <div className="rounded-lg border border-border bg-card p-4">
-              <OTPVerification onSubmitEnabled={setIsSubmitEnabled} />
             </div>
 
             {/* Agree to terms */}
@@ -252,7 +250,7 @@ export default function Home() {
             {/* Action Buttons */}
             <div className="flex items-center justify-center gap-8">
               {/* Submit Button - only visible before first submission */}
-              {!hasSaved && (
+              {!hasSubmitted && (
                 <button
                   onClick={handleSubmit}
                   disabled={!isSubmitEnabled || !agreed}
@@ -267,23 +265,25 @@ export default function Home() {
               )}
 
               {/* Update Button - only visible after first submission */}
-              {hasSaved && (
-                <>
-                  <button
-                    onClick={handleSubmit}
-                    className="rounded-full bg-[#8B4545] px-10 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#744141]"
-                  >
-                    Update
-                  </button>
+              {hasSubmitted && (
+                <button
+                  onClick={handleSubmit}
+                  style={{ display: 'inline-block' }}
+                  className="rounded-full bg-[#8B4545] px-10 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#744141]"
+                >
+                  Update
+                </button>
+              )}
 
-                  {/* Print Button - only visible after first submission */}
-                  <button
-                    onClick={downloadPDF}
-                    className="rounded-full bg-[#8B4545] px-10 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#744141]"
-                  >
-                    Print
-                  </button>
-                </>
+              {/* Print Button - only visible after first submission */}
+              {hasSubmitted && (
+                <button
+                  onClick={downloadPDF}
+                  style={{ display: 'inline-block' }}
+                  className="rounded-full bg-[#8B4545] px-10 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#744141]"
+                >
+                  Print
+                </button>
               )}
 
               {/* Close Button - always visible */}
