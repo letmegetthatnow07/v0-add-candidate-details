@@ -91,7 +91,7 @@ function OTPRow({ type, onVerified }: OTPRowProps) {
                   clipRule="evenodd"
                 />
               </svg>
-              <span className="text-sm font-medium">Verified</span>
+              <span className="text-sm font-medium">Validated</span>
             </div>
           )}
         </div>

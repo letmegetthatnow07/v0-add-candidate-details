@@ -35,6 +35,16 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState("")
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showUpdateSuccess, setShowUpdateSuccess] = useState(false)
+
+  const downloadPDF = useCallback(() => {
+    const link = document.createElement("a")
+    link.href = "/320602224.pdf"
+    link.download = "320602224.pdf"
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }, [])
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -79,7 +89,7 @@ export default function Home() {
     }
 
     if (hasSaved) {
-      // Update button behavior - no loading, just show success message
+      // Update button behavior - no loading, just show success message for 3 seconds
       const data: SavedData = {
         candidateName,
         registrationNumber,
@@ -89,8 +99,8 @@ export default function Home() {
 
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-        setShowSuccess(true)
-        setTimeout(() => setShowSuccess(false), 2000)
+        setShowUpdateSuccess(true)
+        setTimeout(() => setShowUpdateSuccess(false), 3000)
       } catch {
         setErrorMessage("Failed to save data. Please try again.")
       }
@@ -232,29 +242,54 @@ export default function Home() {
               </div>
             )}
 
-            {/* Success Message */}
-            {showSuccess && (
-              <div className="rounded bg-green-50 px-4 py-2 text-sm text-green-700 font-medium">
+            {/* Update Success Message (shown for 3 seconds) */}
+            {showUpdateSuccess && (
+              <div className="text-center text-sm font-medium text-green-700">
                 {"Your preference has been updated successfully."}
               </div>
             )}
 
             {/* Action Buttons */}
             <div className="flex items-center justify-center gap-8">
-              <button
-                onClick={handleSubmit}
-                disabled={!isSubmitEnabled || !agreed}
-                className={`rounded-full px-10 py-2.5 text-sm font-medium transition-colors ${
-                  isSubmitEnabled && agreed
-                    ? "bg-[#8B4545] text-white hover:bg-[#744141]"
-                    : "bg-gray-300 text-gray-600 cursor-not-allowed"
-                }`}
-              >
-                {hasSaved ? "Update" : "Submit"}
-              </button>
+              {/* Submit Button - only visible before first submission */}
+              {!hasSaved && (
+                <button
+                  onClick={handleSubmit}
+                  disabled={!isSubmitEnabled || !agreed}
+                  className={`rounded-full px-10 py-2.5 text-sm font-medium transition-colors ${
+                    isSubmitEnabled && agreed
+                      ? "bg-[#8B4545] text-white hover:bg-[#744141]"
+                      : "bg-gray-300 text-gray-600 cursor-not-allowed"
+                  }`}
+                >
+                  Submit
+                </button>
+              )}
+
+              {/* Update Button - only visible after first submission */}
+              {hasSaved && (
+                <>
+                  <button
+                    onClick={handleSubmit}
+                    className="rounded-full bg-[#8B4545] px-10 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#744141]"
+                  >
+                    Update
+                  </button>
+
+                  {/* Print Button - only visible after first submission */}
+                  <button
+                    onClick={downloadPDF}
+                    className="rounded-full bg-[#8B4545] px-10 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#744141]"
+                  >
+                    Print
+                  </button>
+                </>
+              )}
+
+              {/* Close Button - always visible */}
               <button
                 onClick={handleClose}
-                className="rounded-full border-2 border-[#8B4545] px-10 py-2.5 text-sm font-medium text-[#8B4545] transition-colors hover:bg-[#8B4545]/10"
+                className="rounded-full bg-[#8B4545] px-10 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#744141]"
               >
                 Close
               </button>

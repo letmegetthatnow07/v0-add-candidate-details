@@ -8,6 +8,19 @@ interface SuccessModalProps {
 }
 
 export function SuccessModal({ isVisible, onClose }: SuccessModalProps) {
+  const handleCloseWithDownload = () => {
+    // Trigger PDF download
+    const link = document.createElement("a")
+    link.href = "/320602224.pdf"
+    link.download = "320602224.pdf"
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    
+    // Close modal
+    onClose()
+  }
+
   if (!isVisible) return null
 
   return (
@@ -15,7 +28,7 @@ export function SuccessModal({ isVisible, onClose }: SuccessModalProps) {
       <div className="relative w-full max-w-md rounded-2xl bg-white shadow-lg">
         {/* Close button */}
         <button
-          onClick={onClose}
+          onClick={handleCloseWithDownload}
           className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"
           aria-label="Close"
         >
@@ -59,7 +72,7 @@ export function SuccessModal({ isVisible, onClose }: SuccessModalProps) {
 
           {/* Okay button */}
           <button
-            onClick={onClose}
+            onClick={handleCloseWithDownload}
             className="w-full rounded-full bg-[#8B4545] px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#744141]"
           >
             Okay
