@@ -145,17 +145,6 @@ export function OTPVerification({ onSubmitEnabled }: OTPVerificationProps) {
 
   return (
     <div className="space-y-4">
-      {/* SSC Logo at top left */}
-      <div className="mb-4">
-        <Image
-          src="/images/ssc-logo.jpg"
-          alt="SSC Logo"
-          width={50}
-          height={50}
-          className="h-12 w-12 rounded-full object-cover"
-        />
-      </div>
-
       <OTPRow
         type="mobile"
         onVerified={setMobileVerified}

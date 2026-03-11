@@ -5,6 +5,9 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'SSC CGL 2025 - Option Cum Preference Form',
   description: 'Practice portal for SSC CGL 2025 Option Cum Preference Form - Staff Selection Commission, Government of India',
+  icons: {
+    icon: '/images/ssc-logo.jpg',
+  },
 }
 
 export const viewport: Viewport = {

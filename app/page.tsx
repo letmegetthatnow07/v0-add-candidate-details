@@ -78,8 +78,8 @@ export default function Home() {
       return
     }
 
-    setIsSubmitting(true)
-    setTimeout(() => {
+    if (hasSaved) {
+      // Update button behavior - no loading, just show success message
       const data: SavedData = {
         candidateName,
         registrationNumber,
@@ -89,15 +89,34 @@ export default function Home() {
 
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-        setHasSaved(true)
         setShowSuccess(true)
-        setIsSubmitting(false)
+        setTimeout(() => setShowSuccess(false), 2000)
       } catch {
         setErrorMessage("Failed to save data. Please try again.")
-        setIsSubmitting(false)
       }
-    }, 2000)
-  }, [preferences, agreed, candidateName, registrationNumber, rollNumber, isSubmitEnabled])
+    } else {
+      // Submit button behavior - show loading
+      setIsSubmitting(true)
+      setTimeout(() => {
+        const data: SavedData = {
+          candidateName,
+          registrationNumber,
+          rollNumber,
+          preferences,
+        }
+
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+          setHasSaved(true)
+          setShowSuccess(true)
+          setIsSubmitting(false)
+        } catch {
+          setErrorMessage("Failed to save data. Please try again.")
+          setIsSubmitting(false)
+        }
+      }, 2000)
+    }
+  }, [preferences, agreed, candidateName, registrationNumber, rollNumber, isSubmitEnabled, hasSaved])
 
   const handleClose = useCallback(() => {
     setShowSuccess(false)
@@ -214,7 +233,7 @@ export default function Home() {
             )}
 
             {/* Success Message */}
-            {hasSaved && !showSuccess && (
+            {showSuccess && (
               <div className="rounded bg-green-50 px-4 py-2 text-sm text-green-700 font-medium">
                 {"Your preference has been updated successfully."}
               </div>
@@ -231,7 +250,13 @@ export default function Home() {
                     : "bg-gray-300 text-gray-600 cursor-not-allowed"
                 }`}
               >
-                Submit
+                {hasSaved ? "Update" : "Submit"}
+              </button>
+              <button
+                onClick={handleClose}
+                className="rounded-full border-2 border-[#8B4545] px-10 py-2.5 text-sm font-medium text-[#8B4545] transition-colors hover:bg-[#8B4545]/10"
+              >
+                Close
               </button>
             </div>
           </div>
