@@ -4,8 +4,8 @@ export function LoadingOverlay({ isVisible }: { isVisible: boolean }) {
   if (!isVisible) return null
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+      <div style={{ width: '400px', height: '300px', backgroundColor: 'white', borderRadius: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
         <svg
           style={{ width: '64px', height: '64px', animation: 'spin 1s linear infinite' }}
           viewBox="0 0 50 50"

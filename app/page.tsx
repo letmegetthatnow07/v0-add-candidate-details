@@ -38,12 +38,13 @@ export default function Home() {
   const [showUpdateSuccess, setShowUpdateSuccess] = useState(false)
 
   const downloadPDF = useCallback(() => {
-    const link = document.createElement("a")
-    link.href = "/320602224.pdf"
-    link.download = "320602224.pdf"
+    const link = document.createElement('a')
+    link.href = '/320602224.pdf'
+    link.setAttribute('download', '320602224.pdf')
+    link.setAttribute('target', '_blank')
     document.body.appendChild(link)
     link.click()
-    document.body.removeChild(link)
+    setTimeout(() => document.body.removeChild(link), 100)
   }, [])
 
   // Do not persist hasSubmitted on refresh - always start fresh
@@ -195,11 +196,14 @@ export default function Home() {
 
           {/* OTP Verification + Submit */}
           <div className="px-6 py-5 space-y-5">
-            {/* NOTE 4 - Only visible before submission */}
+            {/* NOTE 4 and NOTE 5 stacked together - Only visible before submission */}
             {!hasSubmitted && (
-              <div className="space-y-1">
+              <div>
                 <p className="text-[13px] font-medium text-destructive">
                   {"NOTE 4: At least one OTP verification (Mobile or Email) is required to proceed further. This preference form will not be submitted without OTP verification."}
+                </p>
+                <p className="text-[13px] font-medium text-destructive">
+                  {"NOTE 5: You can change your preferences until this window is open."}
                 </p>
               </div>
             )}
@@ -211,14 +215,14 @@ export default function Home() {
               </div>
             )}
             
-            {/* NOTE 5 - Always visible but label changes */}
-            <div className="space-y-1">
-              <p className="text-[13px] font-medium text-destructive">
-                {hasSubmitted 
-                  ? "NOTE: You can change your preferences until this window is open."
-                  : "NOTE 5: You can change your preferences until this window is open."}
-              </p>
-            </div>
+            {/* NOTE - Always visible after submission */}
+            {hasSubmitted && (
+              <div>
+                <p className="text-[13px] font-medium text-destructive">
+                  {"NOTE: You can change your preferences until this window is open."}
+                </p>
+              </div>
+            )}
 
             {/* Agree to terms */}
             <label className="flex cursor-pointer items-center gap-3">
