@@ -7,6 +7,9 @@ import { CandidateInfo } from "@/components/candidate-info"
 import { PostTable } from "@/components/post-table"
 import { PreferenceGrid } from "@/components/preference-grid"
 import { Declaration } from "@/components/declaration"
+import { OTPVerification } from "@/components/otp-verification"
+import { LoadingOverlay } from "@/components/loading-overlay"
+import { SuccessModal } from "@/components/success-modal"
 import { posts } from "@/lib/posts-data"
 
 const STORAGE_KEY = "ssc-cgl-preferences"
@@ -30,6 +33,8 @@ export default function Home() {
   const [hasSaved, setHasSaved] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
+  const [isSubmitEnabled, setIsSubmitEnabled] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -58,7 +63,6 @@ export default function Home() {
 
   const handleSubmit = useCallback(() => {
     setErrorMessage("")
-    setShowSuccess(false)
 
     const filledCount = preferences.filter((p) => p !== null).length
     if (filledCount === 0) {
@@ -69,28 +73,33 @@ export default function Home() {
       setErrorMessage("Please agree to the terms and conditions before submitting.")
       return
     }
-
-    const data: SavedData = {
-      candidateName,
-      registrationNumber,
-      rollNumber,
-      preferences,
+    if (!isSubmitEnabled) {
+      setErrorMessage("Please verify at least one OTP before submitting.")
+      return
     }
 
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-      setHasSaved(true)
-      setShowSuccess(true)
-      setTimeout(() => setShowSuccess(false), 4000)
-    } catch {
-      setErrorMessage("Failed to save data. Please try again.")
-    }
-  }, [preferences, agreed, candidateName, registrationNumber, rollNumber])
+    setIsSubmitting(true)
+    setTimeout(() => {
+      const data: SavedData = {
+        candidateName,
+        registrationNumber,
+        rollNumber,
+        preferences,
+      }
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+        setHasSaved(true)
+        setShowSuccess(true)
+        setIsSubmitting(false)
+      } catch {
+        setErrorMessage("Failed to save data. Please try again.")
+        setIsSubmitting(false)
+      }
+    }, 2000)
+  }, [preferences, agreed, candidateName, registrationNumber, rollNumber, isSubmitEnabled])
 
   const handleClose = useCallback(() => {
-    setPreferences(Array(TOTAL_POSTS).fill(null))
-    setAgreed(false)
-    setErrorMessage("")
     setShowSuccess(false)
   }, [])
 
@@ -167,8 +176,24 @@ export default function Home() {
             <Declaration />
           </div>
 
-          {/* Agree + Submit */}
-          <div className="px-6 py-5">
+          {/* OTP Verification + Submit */}
+          <div className="px-6 py-5 space-y-5">
+            {/* NOTE 4 and 5 */}
+            <div className="space-y-1">
+              <p className="text-[13px] font-medium text-destructive">
+                {"NOTE 4: At least one OTP verification (Mobile or Email) is required to proceed further. This preference form will not be submitted without OTP verification."}
+              </p>
+              <p className="text-[13px] font-medium text-destructive">
+                {"NOTE 5: You can change your preferences until this window is open."}
+              </p>
+            </div>
+
+            {/* OTP Verification Section */}
+            <div className="rounded-lg border border-border bg-card p-4">
+              <OTPVerification onSubmitEnabled={setIsSubmitEnabled} />
+            </div>
+
+            {/* Agree to terms */}
             <label className="flex cursor-pointer items-center gap-3">
               <input
                 type="checkbox"
@@ -181,35 +206,25 @@ export default function Home() {
               </span>
             </label>
 
-            <p className="mt-3 text-[13px] font-medium text-destructive">
-              {"NOTE: You can change your preferences until this window is open."}
-            </p>
-
-            {/* Error / Success */}
+            {/* Error Message */}
             {errorMessage && (
-              <div className="mt-3 rounded bg-destructive/10 px-4 py-2 text-sm text-destructive">
+              <div className="rounded bg-destructive/10 px-4 py-2 text-sm text-destructive">
                 {errorMessage}
-              </div>
-            )}
-            {showSuccess && (
-              <div className="mt-3 rounded bg-green-50 px-4 py-2 text-sm text-green-700">
-                {"Your preferences have been saved successfully!"}
               </div>
             )}
 
             {/* Action Buttons */}
-            <div className="mt-6 flex items-center justify-center gap-8">
+            <div className="flex items-center justify-center gap-8">
               <button
                 onClick={handleSubmit}
-                className="rounded-full bg-primary px-10 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                disabled={!isSubmitEnabled || !agreed}
+                className={`rounded-full px-10 py-2.5 text-sm font-medium transition-colors ${
+                  isSubmitEnabled && agreed
+                    ? "bg-[#8B4545] text-white hover:bg-[#744141]"
+                    : "bg-gray-300 text-gray-600 cursor-not-allowed"
+                }`}
               >
-                {hasSaved ? "Update" : "Submit"}
-              </button>
-              <button
-                onClick={handleClose}
-                className="rounded-full bg-primary px-10 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-              >
-                Close
+                Submit Preference
               </button>
             </div>
           </div>
@@ -217,6 +232,12 @@ export default function Home() {
       </main>
 
       <SiteFooter />
+      
+      {/* Loading Overlay */}
+      <LoadingOverlay isVisible={isSubmitting} />
+      
+      {/* Success Modal */}
+      <SuccessModal isVisible={showSuccess} onClose={handleClose} />
     </div>
   )
 }
