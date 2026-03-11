@@ -254,19 +254,14 @@ export default function Home() {
             {/* Action Buttons */}
             <div className="flex items-center justify-center gap-8">
               {/* Submit Button - only visible before first submission */}
-              {!hasSubmitted && (
-                <button
-                  onClick={handleSubmit}
-                  disabled={!isSubmitEnabled || !agreed}
-                  className={`rounded-full px-10 py-2.5 text-sm font-medium transition-colors ${
-                    isSubmitEnabled && agreed
-                      ? "bg-[#8B4545] text-white hover:bg-[#744141]"
-                      : "bg-gray-300 text-gray-600 cursor-not-allowed"
-                  }`}
-                >
-                  Submit
-                </button>
-              )}
+             {!hasSubmitted && (
+  <button
+    onClick={handleSubmit}
+    className="rounded-full bg-[#8B4545] px-10 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#744141]"
+  >
+    Submit
+  </button>
+)}
 
               {/* Update Button - only visible after first submission */}
               {hasSubmitted && (
@@ -291,12 +286,15 @@ export default function Home() {
               )}
 
               {/* Close Button - always visible */}
-              <button
-                onClick={handleClose}
-                className="rounded-full bg-[#8B4545] px-10 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#744141]"
-              >
-                Close
-              </button>
+<button
+  onClick={() => {
+    setShowSuccess(false)
+    // Close button does NOT set hasSubmitted
+  }}
+  className="rounded-full bg-[#8B4545] px-10 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#744141]"
+>
+  Close
+</button>
             </div>
           </div>
         </div>
