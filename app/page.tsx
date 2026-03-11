@@ -197,16 +197,16 @@ export default function Home() {
           {/* OTP Verification + Submit */}
           <div className="px-6 py-5 space-y-5">
             {/* NOTE 4 and NOTE 5 stacked together - Only visible before submission */}
-            {!hasSubmitted && (
-              <div>
-                <p className="text-[13px] font-medium text-destructive">
-                  {"NOTE 4: At least one OTP verification (Mobile or Email) is required to proceed further. This preference form will not be submitted without OTP verification."}
-                </p>
-                <p className="text-[13px] font-medium text-destructive">
-                  {"NOTE 5: You can change your preferences until this window is open."}
-                </p>
-              </div>
-            )}
+           {!hasSubmitted && (
+  <div style={{ marginBottom: 0 }}>
+    <p className="text-[13px] font-medium text-destructive" style={{ marginBottom: '2px' }}>
+      {"NOTE 4: At least one OTP verification (Mobile or Email) is required to proceed further. This preference form will not be submitted without OTP verification."}
+    </p>
+    <p className="text-[13px] font-medium text-destructive" style={{ marginBottom: 0 }}>
+      {"NOTE 5: You can change your preferences until this window is open."}
+    </p>
+  </div>
+)}
 
             {/* OTP Verification Section - Only visible before submission */}
             {!hasSubmitted && (
