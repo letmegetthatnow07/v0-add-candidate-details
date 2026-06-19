@@ -3,48 +3,42 @@ import { MapPin } from "lucide-react"
 
 export function SiteFooter() {
   return (
-    <footer className="bg-footer-bg text-footer-foreground">
-      <div className="mx-auto max-w-[1200px] px-4 py-10">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
-          {/* Logo and Name */}
-          <div className="flex items-start gap-3">
+    <footer style={{ backgroundColor: '#2d2d2d', color: '#ffffff' }}>
+      {/* Top Section */}
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '32px' }}>
+          {/* Logo and Organization Name */}
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
             <Image
               src="/images/ssc-logo.jpg"
               alt="Staff Selection Commission Logo"
-              width={56}
-              height={56}
-              className="h-14 w-14 shrink-0 rounded-full object-cover"
+              width={70}
+              height={70}
+              style={{ width: '70px', height: '70px', borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
             />
             <div>
-              <p className="text-lg font-bold text-card">Staff Selection</p>
-              <p className="text-lg font-bold text-card">Commission</p>
+              <p style={{ fontSize: '18px', fontWeight: 'bold', color: '#ffffff', margin: 0 }}>Staff Selection</p>
+              <p style={{ fontSize: '18px', fontWeight: 'bold', color: '#ffffff', margin: 0 }}>Commission</p>
             </div>
           </div>
 
-          {/* Public Disclosure */}
-          <div className="flex items-start">
-            <p className="text-sm leading-relaxed text-footer-foreground">
-              Public Disclosure of Scores and Other Details of Non-Recommended
-              Willing Candidates
+          {/* Left Column Links */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#ffffff', margin: 0 }}>
+              Public Disclosure of Scores and Other Details of Non-Recommended Willing Candidates
+            </p>
+            <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#ffffff', margin: 0 }}>
+              List of Debarred Candidates in Examinations Conducted by the Staff Selection Commission
             </p>
           </div>
 
           {/* Useful Links */}
           <div>
-            <h4 className="mb-3 text-base font-bold text-card underline">
-              Useful links
-            </h4>
-            <ul className="space-y-1.5 text-sm">
-              {[
-                "Archives",
-                "Disclaimer",
-                "Sitemap",
-                "Help",
-                "Website Policies",
-                "Web Information Manager",
-              ].map((link) => (
-                <li key={link}>
-                  <span className="cursor-pointer text-footer-foreground transition-colors hover:text-card">
+            <h4 style={{ fontSize: '16px', fontWeight: 'bold', color: '#ffffff', marginBottom: '12px' }}>Useful links</h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {["DoPT", "Archives", "Disclaimer", "Sitemap", "Help", "Website Policies", "Web Information Manager"].map((link) => (
+                <li key={link} style={{ fontSize: '14px' }}>
+                  <span style={{ cursor: 'pointer', color: '#ffffff', transition: 'color 0.3s' }} className="hover:text-gray-300">
                     {link}
                   </span>
                 </li>
@@ -54,26 +48,25 @@ export function SiteFooter() {
 
           {/* Contact Us */}
           <div>
-            <h4 className="mb-3 text-base font-bold text-card underline">
-              Contact Us
-            </h4>
-            <div className="flex items-start gap-2 text-sm">
-              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-footer-foreground" />
-              <p className="text-footer-foreground">
-                Block No-12, CGO Complex, Lodhi Road New Delhi
+            <h4 style={{ fontSize: '16px', fontWeight: 'bold', color: '#ffffff', marginBottom: '12px' }}>Contact Us</h4>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '14px' }}>
+              <MapPin style={{ width: '20px', height: '20px', marginTop: '2px', flexShrink: 0, color: '#ffffff' }} />
+              <p style={{ color: '#ffffff', margin: 0 }}>
+                Block No-12, CGO Complex, Lodhi Road New Delhi - 110003
               </p>
             </div>
           </div>
         </div>
       </div>
 
+      {/* Divider */}
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.2)' }}></div>
+
       {/* Bottom Bar */}
-      <div className="border-t border-footer-foreground/20">
-        <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-2 px-4 py-3 text-xs text-footer-foreground">
-          <span>{"© 2026 SSC. All Rights Reserved."}</span>
-          <span>{"Total Visitor Count: 341805290"}</span>
-          <span>{"Last updated on Mar 9, 2026"}</span>
-        </div>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', fontSize: '14px', color: '#ffffff' }}>
+        <span>{"© 2026 SSC. All Rights Reserved."}</span>
+        <span>{"Total Visitor Count: 451005794"}</span>
+        <span>{"Last updated on Jun 19, 2026"}</span>
       </div>
     </footer>
   )

@@ -5,6 +5,9 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'SSC CHSL 2025 - Option Cum Preference Form',
   description: 'Practice portal for SSC CHSL 2025 Option Cum Preference Form - Staff Selection Commission, Government of India',
+  icons: {
+    icon: '/favicon.ico',
+  },
 }
 
 export const viewport: Viewport = {
