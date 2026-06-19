@@ -8,17 +8,17 @@ export function SiteFooter() {
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 16px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '32px' }}>
           {/* Logo and Organization Name */}
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <Image
               src="/images/ssc-logo.jpg"
               alt="Staff Selection Commission Logo"
-              width={70}
-              height={70}
-              style={{ width: '70px', height: '70px', borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
+              width={60}
+              height={60}
+              style={{ width: '60px', height: '60px', borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
             />
-            <div>
-              <p style={{ fontSize: '18px', fontWeight: 'bold', color: '#ffffff', margin: 0 }}>Staff Selection</p>
-              <p style={{ fontSize: '18px', fontWeight: 'bold', color: '#ffffff', margin: 0 }}>Commission</p>
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#ffffff', margin: 0, lineHeight: '1.2' }}>Staff Selection</p>
+              <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#ffffff', margin: 0, lineHeight: '1.2' }}>Commission</p>
             </div>
           </div>
 
