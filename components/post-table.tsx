@@ -13,14 +13,11 @@ export function PostTable({ posts, preferences }: PostTableProps) {
       <table className="w-full border-collapse text-sm">
         <thead>
           <tr className="border-b-2 border-border bg-secondary">
-            <th className="px-3 py-2.5 text-left font-semibold text-foreground">
-              Post Code
+            <th className="px-3 py-2.5 text-left font-semibold text-foreground w-20">
+              Code
             </th>
             <th className="px-3 py-2.5 text-left font-semibold text-foreground">
-              Post Name
-            </th>
-            <th className="px-3 py-2.5 text-left font-semibold text-foreground">
-              {"Name of Ministry/ Department"}
+              Organization/ Ministry Name
             </th>
           </tr>
         </thead>
@@ -35,7 +32,6 @@ export function PostTable({ posts, preferences }: PostTableProps) {
               <td className="px-3 py-2.5 font-bold text-primary">
                 {post.postCode}
               </td>
-              <td className="px-3 py-2.5 text-foreground">{post.postName}</td>
               <td className="px-3 py-2.5 text-foreground">{post.ministry}</td>
             </tr>
           ))}

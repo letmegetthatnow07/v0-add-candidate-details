@@ -12,8 +12,8 @@ import { LoadingOverlay } from "@/components/loading-overlay"
 import { SuccessModal } from "@/components/success-modal"
 import { posts } from "@/lib/posts-data"
 
-const STORAGE_KEY = "ssc-cgl-preferences"
-const TOTAL_POSTS = 55
+const STORAGE_KEY = "ssc-chsl-preferences"
+const TOTAL_POSTS = 56
 
 interface SavedData {
   candidateName: string
